@@ -19,7 +19,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes "Main-Class": "io.boros.app.Application"
+        attributes "Main-Class": "io.boros.propgen.PropertiesGenerator"
     }
 
     from {

@@ -1,4 +1,4 @@
-package io.boros.app;
+package io.boros.propgen;
 
 import java.util.Collection;
 import java.util.Set;

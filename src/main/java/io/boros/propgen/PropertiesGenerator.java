@@ -1,6 +1,6 @@
-package io.boros.app;
+package io.boros.propgen;
 
-public class Application {
+public class PropertiesGenerator {
 
     public static void main(String[] args) {
         Configuration configuration = new ArgumentsParser(args).parse();
