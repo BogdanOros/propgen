@@ -1,8 +1,9 @@
 # progen
 ---
 ### 👨‍💻 Why
+
 Add compile-time safety to your property keys, 
-removes the need to full-text search your project and pray.
+removes the need to full-text search your project and to pray.
 ---
 
 **Questions**: But really why?
