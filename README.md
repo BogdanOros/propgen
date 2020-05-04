@@ -66,9 +66,12 @@ spring.datasource.password=1234
 What is the correct type for the `password` property? `Number`?
 Using `Number` type for generation will work for local development configuration,
 but most likely will break your production environment, which uses `qwerty1234` as the password.  
+
 2. All primitives are strings leads to String Driven Development.
+
 3. Using `type-overrides` and other `configuration hacks`.  
 Now you should remember that there is a configuration that keeps your builds working.
+
 4. Use comments in property files.
 ```properties
 spring.datasource.password=1234 // string
