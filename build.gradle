@@ -19,6 +19,8 @@ dependencies {
 }
 
 jar {
+    archiveFileName = "propgen.jar"
+
     manifest {
         attributes "Main-Class": "io.boros.propgen.PropertiesGenerator"
     }
@@ -41,7 +43,10 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
-            from(components.java)
+            groupId = 'io.boros'
+            artifactId = 'propertygen'
+            version = System.getenv("VERSION")
+            from components.java
         }
     }
 }
