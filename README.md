@@ -1,6 +1,6 @@
 # progen
----
-### 👨‍💻 Why
+
+## 👨‍💻 Why
 
 Add compile-time safety to your property keys, 
 removes the need to full-text search your project and to pray.
@@ -75,7 +75,7 @@ spring.datasource.password=1234 // string
 ```
 Maybe this is the way to do it properly.
 
-### 👨‍💻 How to use
+## 👨‍💻 How to use
 I am using gradle for my build configuration, so here is the gradle configuration:
 ```groovy
 task generateProps(type: JavaExec) {
