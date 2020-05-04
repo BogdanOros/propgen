@@ -16,7 +16,7 @@ public class ClassWithProperties {
         PicoWriter writer = new PicoWriter();
         writer.writeln("package $1;".replace("$1", configuration.outputPackage));
         writer.writeln("");
-        writer.writeln("public class ApplicationProperties {");
+        writer.writeln("public class $1 {".replace("$1", configuration.className));
 
         PicoWriter inner = writer.createDeferredWriter();
         inner.writeln_r("");
