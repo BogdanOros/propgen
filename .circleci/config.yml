@@ -1,15 +1,51 @@
-# Java Gradle CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
 version: 2
-jobs:
-  init-dependencies:
+executors:
+  java-executor:
     docker:
       - image: circleci/openjdk:8-jdk
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx3200m
+      
+commands:
+  run-tests:
+    description: "A command to run tests for a module"
+    parameters:
+      module:
+        type: string
+    steps:
+       - checkout
+       - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+       - run: echo "Running api << parameters.module >>"
+  flyway-migrate:
+    decription: "A command to run schema migrations"
+    parameters:
+      schema:
+        type: string
+    steps:
+      - checkout
+      - run: echo "Migrating schema: <<parameters.schema>>"
+  deploy:
+    description: "A command to run deployment"
+    parameters:
+      module:
+        type: string
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+      - run: echo "Deploying <<parameters.module>>"
+     
+    
+jobs:
+  init-dependencies:
+    executor: java-executor
     steps:
       - checkout
       - restore_cache:
@@ -22,66 +58,29 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
-  api-test:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    working_directory: ~/repo
 
-    environment:
-      JVM_OPTS: -Xmx3200m
-    
+  api-test:
+    executor: java-executor
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
-      - run: echo "Running api tests"
+      - run-tests:
+          module: "api"
   worker-test:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    working_directory: ~/repo
-    environment:
-      JVM_OPTS: -Xmx3200m
-    
+    executor: java-executor
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
-      - run: echo "Running worker tests"
+      - run-tests:
+          module: "worker"
  
   deploy-api:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    working_directory: ~/repo
-
-    environment:
-      JVM_OPTS: -Xmx3200m
-    
+    executor: java-executor
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
-      - run: echo "Deploying API"
+      - deploy:
+          module: "api"
+          
   deploy-worker:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    working_directory: ~/repo
-
-    environment:
-      JVM_OPTS: -Xmx3200m
-    
+    executor: java-executor
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
-      - run: echo "Deploying Worker"
+      - deploy:
+          module: "worker"
 workflows:
   version: 2
   comparison-workflow:
