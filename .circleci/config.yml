@@ -97,6 +97,11 @@ jobs:
     steps:
       - deploy:
           module: "worker"
+  tests-finished:
+    executor: java-executor
+    steps:
+      - run: echo Finished tests, waiting for approval
+    
 workflows:
   version: 2
   comparison-workflow:
@@ -108,18 +113,20 @@ workflows:
       - worker-test:
           requires:
             - init-dependencies
+      - tests-finished:
+          type: approval
+          requires:
+            - api-test
+            - worker-test
       - migrate-audits:
           requires:
-            - api-test
-            - worker-test
+            - tests-finished
       - migrate-configs:
           requires:
-            - api-test
-            - worker-test
+            - tests-finished
       - migrate-journeys:
           requires:
-             - api-test
-             - worker-test
+            - tests-finished
       - deploy-api:
           type: approval
           requires:
