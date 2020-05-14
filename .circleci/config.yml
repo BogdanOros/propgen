@@ -45,7 +45,8 @@ commands:
     
 jobs:
   init-dependencies:
-    executor: java-executor
+    executor: 
+      name: java-executor
     steps:
       - checkout
       - restore_cache:
