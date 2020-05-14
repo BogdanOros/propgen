@@ -70,7 +70,22 @@ jobs:
     steps:
       - run-tests:
           module: "worker"
- 
+  migrate-audits:
+    executor: java-executor
+    steps:
+      - flyway-migrate:
+          schema: audits
+  migrate-configs:
+    executor: java-executor
+    steps:
+      - flyway-migrate:
+          schema: config
+  migrate-journeys:
+    executor: java-executor
+    steps:
+      - flyway-migrate:
+          schema: journey
+    
   deploy-api:
     executor: java-executor
     steps:
@@ -93,12 +108,30 @@ workflows:
       - worker-test:
           requires:
             - init-dependencies
+      - migrate-audits:
+          requires:
+            - api-test
+            - worker-test
+      - migrate-configs:
+          requires:
+            - api-test
+            - worker-test
+      - migrate-journeys:
+          requires:
+             - api-test
+             - worker-test
       - deploy-api:
           type: approval
           requires:
             - api-test
+            - migrate-configs
+            - migrate-audits
+            - migrate-journeys
       - deploy-worker:
           type: approval
           requires:
             - worker-test
+            - migrate-configs
+            - migrate-audits
+            - migrate-journeys
       
