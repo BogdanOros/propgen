@@ -20,7 +20,7 @@ commands:
             - v1-dependencies-{{ checksum "build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-       - run: echo "Running api << parameters.module >>"
+       - run: echo Running api << parameters.module >>
   flyway-migrate:
     decription: "A command to run schema migrations"
     parameters:
@@ -28,7 +28,7 @@ commands:
         type: string
     steps:
       - checkout
-      - run: echo "Migrating schema: <<parameters.schema>>"
+      - run: echo Migrating schema: <<parameters.schema>>
   deploy:
     description: "A command to run deployment"
     parameters:
@@ -40,7 +40,7 @@ commands:
           keys:
             - v1-dependencies-{{ checksum "build.gradle" }}
             - v1-dependencies-
-      - run: echo "Deploying <<parameters.module>>"
+      - run: echo Deploying << parameters.module >>
      
     
 jobs:
