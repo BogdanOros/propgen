@@ -22,7 +22,7 @@ commands:
             - v1-dependencies-
        - run: echo Running api << parameters.module >>
   flyway-migrate:
-    decription: "A command to run schema migrations"
+    description: "A command to run schema migrations"
     parameters:
       schema:
         type: string
