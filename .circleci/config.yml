@@ -28,7 +28,7 @@ commands:
         type: string
     steps:
       - checkout
-      - run: echo Migrating schema: <<parameters.schema>>
+      - run: echo Migrating schema <<parameters.schema>>
   deploy:
     description: "A command to run deployment"
     parameters:
