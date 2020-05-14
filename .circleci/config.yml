@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  init_dependencies:
+  init-dependencies:
     docker:
       - image: circleci/openjdk:8-jdk
     working_directory: ~/repo
@@ -67,7 +67,7 @@ jobs:
             - v1-dependencies-{{ checksum "build.gradle" }}
             - v1-dependencies-
       - run: echo "Deploying API"
-   deploy-worker:
+  deploy-worker:
     docker:
       image: circleci/openjdk:8-jdk
     working_directory: ~/repo
@@ -86,13 +86,13 @@ workflows:
   version: 2
   comparison-workflow:
     jobs:
-      - init_dependencies
+      - init-dependencies
       - api-test:
           requires:
-            - init_dependencies
+            - init-dependencies
       - worker-test:
           requires:
-            - init_dependencies
+            - init-dependencies
       - deploy-api:
           type: approval
           requires:
