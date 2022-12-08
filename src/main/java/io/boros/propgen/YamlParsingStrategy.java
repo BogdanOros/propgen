@@ -1,5 +1,8 @@
 package io.boros.propgen;
 
+import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.yaml.snakeyaml.Yaml;
 
 import java.nio.file.Path;
@@ -13,8 +16,11 @@ public class YamlParsingStrategy implements ParsingStrategy {
 
     @Override
     public Set<String> parse(Path path, String content) {
-        Map<String, Object> map = yaml.load(content);
-        return getKeys(map, "");
+        Iterable<Object> yamlFiles = yaml.loadAll(content);
+        return StreamSupport.stream(yamlFiles.spliterator(), false)
+            .map(__ -> (Map<String, Object>) __)
+            .flatMap(props -> getKeys(props, "").stream())
+            .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private Set<String> getKeys(Map<String, Object> yamlConfig, String prefix) {
@@ -24,14 +30,14 @@ public class YamlParsingStrategy implements ParsingStrategy {
             final String propertyPart = prefix.equals("")
                     ? property.getKey()
                     : prefix + "." + property.getKey();
-            if (!(property.getValue() instanceof Map)) {
-                results.add(propertyPart);
-            } else {
+            results.add(propertyPart);
+            if (property.getValue() instanceof Map) {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> inner = (Map<String, Object>) yamlConfig.get(property.getKey());
                 results.addAll(getKeys(inner, propertyPart));
             }
         }
+
         return results;
     }
 

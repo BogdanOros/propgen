@@ -12,7 +12,7 @@ in Spring Boot projects for example.
 A default example:
 ```java
 
-@SqsListener("cloud.aws.sqs.queue") // <-- pain point 
+@SqsListener("${cloud.aws.sqs.queue}") // <-- pain point 
 public void handleMessage(String body) {}
 ```
 
@@ -20,7 +20,7 @@ Refactoring the property names is painful and error-prone.
 
 **Question**: How does the library fix the problem:
 ```java
-@SqsListener(ApplicationProperties.CLOUD_AWS_SQS_QUEUE) // <-- generated safe code
+@SqsListener("${" + ApplicationProperties.CLOUD_AWS_SQS_QUEUE + "}") // <-- generated safe code
 public void handleMessage(String body) {}
 ```
 Renaming the property name in the property file will fail the project compilation.
@@ -80,6 +80,46 @@ Maybe this is the way to do it properly.
 
 ## 👨‍💻 How to use
 I am using gradle for my build configuration, so here is the gradle configuration:
+
+```xml
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>3.1.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>java</goal>
+            </goals>
+            <phase>validate</phase>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>io.boros</groupId>
+            <artifactId>propertygen</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+    </dependencies>
+    <configuration>
+        <executable>java</executable>
+        <executableDependency>
+            <groupId>io.boros</groupId>
+            <artifactId>propertygen</artifactId>
+        </executableDependency>
+        <includePluginDependencies>true</includePluginDependencies>
+        <includeProjectDependencies>false</includeProjectDependencies>
+        <mainClass>io.boros.propgen.PropertiesGenerator</mainClass>
+        <arguments>
+            <argument>--outputPackage=com.workmotion.properties</argument>
+            <argument>--generatedPath=${project.build.directory}/generated-sources/annotations</argument>
+            <argument>--dirs=${project.basedir}/src/main/resources</argument>
+            <argument>--classname=ApplicationProperties</argument>
+        </arguments>
+    </configuration>
+    </plugin>
+```
+
 ```groovy
 task generateProps(type: JavaExec) {
     classpath = files("/path/to/jar")

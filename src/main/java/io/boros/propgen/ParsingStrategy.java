@@ -5,6 +5,6 @@ import java.util.Set;
 
 public interface ParsingStrategy {
 
-    Set<String> parse(Path path, String content);
+  Set<String> parse(Path path, String content);
 
 }

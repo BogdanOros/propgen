@@ -1,5 +1,6 @@
 package io.boros.propgen;
 
+import io.boros.propgen.PropertyKeys.FormattedKey;
 import org.ainslec.picocog.PicoWriter;
 
 public class ClassWithProperties {
@@ -14,17 +15,15 @@ public class ClassWithProperties {
 
     public String generate() {
         PicoWriter writer = new PicoWriter();
-        writer.writeln("package $1;".replace("$1", configuration.outputPackage));
+        writer.writeln(String.format("package %s;", configuration.outputPackage));
         writer.writeln("");
-        writer.writeln("public class $1 {".replace("$1", configuration.className));
+        writer.writeln(String.format("public class %s {", configuration.className));
 
         PicoWriter inner = writer.createDeferredWriter();
         inner.writeln_r("");
 
-        for (String key : propertyKeys.collect()) {
-            String formattedKey = key.replaceAll("([A-Z])", "_$1");
-            formattedKey = formattedKey.replaceAll("[.-]", "_").toUpperCase();
-            inner.writeln("public static final String " + formattedKey + " = \"" + key + "\";");
+        for (FormattedKey key : propertyKeys.collect()) {
+            inner.writeln(String.format("public static final String %s = \"%s\";", key.formatKey(), key.key));
         }
         writer.writeln("");
         writer.writeln("}");
