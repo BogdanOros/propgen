@@ -44,8 +44,8 @@ publishing {
     publications {
         gpr(MavenPublication) {
             groupId = 'io.boros'
-            artifactId = 'propertygen'
-            version = System.getenv("VERSION")
+            artifactId = 'propgen'
+            version = '1.0.0'
             from components.java
         }
     }
