@@ -3,10 +3,10 @@ plugins {
     id 'maven-publish'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'io.boros'
+version '1.0.0'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
@@ -39,14 +39,6 @@ publishing {
                 username = System.getenv("USERNAME")
                 password = System.getenv("TOKEN")
             }
-        }
-    }
-    publications {
-        gpr(MavenPublication) {
-            groupId = 'io.boros'
-            artifactId = 'propertygen'
-            version = System.getenv("VERSION")
-            from components.java
         }
     }
 }
